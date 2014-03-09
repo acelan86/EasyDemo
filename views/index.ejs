@@ -1,0 +1,96 @@
+<% include header.ejs %>
+<div class='container'>
+    <form class="form-horizontal" action='/' role="form" onsubmit='return false;'>
+        <div class="form-group">
+            <div class='col-md-2'>
+                <select class="form-control" id='selLocation'>
+                    <option value='http://www.sina.com.cn'>浪首</option>
+                    <option value='http://www.finance.sina.com.cn'>财经首页</option>
+                    <option value='http://www.auto.sina.com.cn'>汽车首页</option>
+                    <option value='http://www.news.sina.com.cn'>新闻首页</option>
+                    <option value='http://www.sina.com.cn'>新闻正文页</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <input type='text' class='form-control' id='url' name='url' value='http://www.sina.com.cn' placeholder='http://sina.com.cn'>
+            </div>
+            <div class='col-md-1'>
+                <button id='fetchBtn' class='btn btn-primary' data-loading-text="正在加载...">抓取</button>
+            </div>
+        </div>
+    </form>
+    
+    <div id='srcCode'>
+    </div>
+    <link rel="stylesheet" type="text/css" href="/public/stylesheets/codemirror.css">
+    <link rel="stylesheet" type="text/css" href="/public/stylesheets/solarized.css">
+    <link rel="stylesheet" type="text/css" href="/public/stylesheets/fullscreen.css">
+    <link rel="stylesheet" type="text/css" href="/public/stylesheets/dialog.css">
+    <link rel="stylesheet" type="text/css" href="/public/stylesheets/select2.css">
+
+    <script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/public/javascripts/codemirror/codemirror.js"></script>
+    <script type="text/javascript" src="/public/javascripts/codemirror/javascript.js"></script>
+    <script type="text/javascript" src="/public/javascripts/codemirror/css.js"></script>
+    <script type="text/javascript" src="/public/javascripts/codemirror/xml.js"></script>
+    <script type="text/javascript" src="/public/javascripts/codemirror/htmlmixed.js"></script>
+    <script type="text/javascript" src="/public/javascripts/codemirror/fullscreen.js"></script>
+    <script type="text/javascript" src="/public/javascripts/codemirror/dialog.js"></script>
+    <script type="text/javascript" src="/public/javascripts/codemirror/search.js"></script>
+    <script type="text/javascript" src="/public/javascripts/codemirror/searchcursor.js"></script>
+    <script type="text/javascript" src="/public/javascripts/codemirror/match-highlighter.js"></script>
+    <script type="text/javascript" src="/public/javascripts/codemirror/matchBrackets.js"></script>
+    <script type="text/javascript" src="/public/javascripts/codemirror/active-line.js"></script>
+
+    <script type="text/javascript" src='/public/javascripts/select2.js'></script>
+    <script type="text/javascript" src='/public/javascripts/main.js'></script>
+
+</div>
+
+<div id='fix-tools'>
+    <div class='form-group'>
+        <select class='form-control' id='type' name='type'>
+            <option value='0'>请选择</option>
+            <option value='通栏'>通栏</option>
+            <option value='画中画'>画中画</option>
+            <option value='跨栏'>跨栏</option>
+            <option value='背投'>背投</option>
+            <option value='视窗'>视窗</option>
+            <option value='文字链'>文字链</option>
+            <option value='流媒体'>流媒体</option>
+            <option value='翻牌'>翻牌</option>
+        </select>
+    </div>
+    <div class='form-group'>
+        <input class='form-control' type='text' id='pdpsInput' value='PDPS000000001010' placeholder='PDPS000000000001'>
+    </div>
+    <div class='form-group'>
+        <button id='topInsertBtn' class='btn btn-primary'>顶部插入</button>
+        <button id="fpInsertBtn" class='btn btn-primary'>定点插入</button>
+    </div>
+    <div class='form-group' style='margin-top: 36px;'>
+        <select id='tplSel' style='width:100%;'>
+            <option value="jiaodian">焦点图包框</option>
+            <option value="bg">背景广告</option>
+            <option value="bg2">背景广告2</option>
+            <option value="bg3">背景广告3</option>
+            <option value="bg4">背景广告4</option>
+        </select>
+    </div>
+    <div class='form-group'>
+        <button id="tplInsertBtn" class='btn btn-primary'>模板插入</button>
+    </div>
+
+    <div class='form-group' style='margin-top:36px;'>
+        <button id='saveBtn' class='btn btn-primary'>保 &nbsp; 存</button>
+    </div>
+</div>
+
+<form id='saveForm' action='/api/save' method='post' style='display:none;' target='downloadIframe'>
+    <textarea name='htmlContent' id='htmlContent'></textarea>
+</form>
+
+<iframe src="about:blank" name='downloadIframe' id="downloadIframe" style='display:none;'>
+</iframe>
+<% include footer.ejs %>
