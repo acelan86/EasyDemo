@@ -5,10 +5,10 @@
             <div class='col-md-2'>
                 <select class="form-control" id='selLocation'>
                     <option value='http://www.sina.com.cn'>浪首</option>
-                    <option value='http://www.finance.sina.com.cn'>财经首页</option>
-                    <option value='http://www.auto.sina.com.cn'>汽车首页</option>
-                    <option value='http://www.news.sina.com.cn'>新闻首页</option>
-                    <option value='http://www.sina.com.cn'>新闻正文页</option>
+                    <option value='http://finance.sina.com.cn'>财经首页</option>
+                    <option value='http://auto.sina.com.cn'>汽车首页</option>
+                    <option value='http://news.sina.com.cn'>新闻首页</option>
+                    <option value='http://sina.com.cn'>新闻正文页</option>
                 </select>
             </div>
             <div class="col-md-4">
@@ -44,6 +44,7 @@
     <script type="text/javascript" src="/public/javascripts/codemirror/active-line.js"></script>
 
     <script type="text/javascript" src='/public/javascripts/select2.js'></script>
+    <script type="text/javascript" src='/public/javascripts/tpl.js'></script>
     <script type="text/javascript" src='/public/javascripts/main.js'></script>
 
 </div>
@@ -52,14 +53,16 @@
     <div class='form-group'>
         <select class='form-control' id='type' name='type'>
             <option value='0'>请选择</option>
-            <option value='通栏'>通栏</option>
-            <option value='画中画'>画中画</option>
-            <option value='跨栏'>跨栏</option>
-            <option value='背投'>背投</option>
-            <option value='视窗'>视窗</option>
-            <option value='文字链'>文字链</option>
-            <option value='流媒体'>流媒体</option>
-            <option value='翻牌'>翻牌</option>
+            <option value='tl'>通栏</option>
+            <option value='hzh'>画中画</option>
+            <option value='kl'>跨栏</option>
+            <option value='bp'>背投</option>
+            <option value='sc'>视窗</option>
+            <option value='wzl'>文字链</option>
+            <option value='lmt'>流媒体</option>
+            <option value='fp'>翻牌</option>
+            <option value='dl'>对联</option>
+            <option value='kzdl'>扩展对联</option>
         </select>
     </div>
     <div class='form-group'>
@@ -68,6 +71,9 @@
     <div class='form-group'>
         <button id='topInsertBtn' class='btn btn-primary'>顶部插入</button>
         <button id="fpInsertBtn" class='btn btn-primary'>定点插入</button>
+    </div>
+    <div class='form-group'>
+        <button id="insInsertBtn" class='btn btn-primary'>插入Ins</button>
     </div>
     <div class='form-group' style='margin-top: 36px;'>
         <select id='tplSel' style='width:100%;'>
@@ -84,6 +90,12 @@
 
     <div class='form-group' style='margin-top:36px;'>
         <button id='saveBtn' class='btn btn-primary'>保 &nbsp; 存</button>
+        <a id='fileLink' class='btn btn-primary' href='#' style='display:none' target='_blank'>打 &nbsp; 开</a>
+        <!-- <button id='downloadBtn' class='btn btn-primary'>下 &nbsp; 载</button> -->
+    </div>
+
+    <div class='form-group' style='margin-top:36px;'>
+        <a id='downloadBtn' class='btn btn-primary' href='#' style='display:none'>下 &nbsp; 载</a>
     </div>
 </div>
 

@@ -8,7 +8,6 @@ exports.fetchURL = function (requset, response) {
 
         var html = "";
         var getURL = url.parse(destURL);
-        console.log('fetch....' + destURL);
         var req = http.get(getURL, function (res) {
             res.setEncoding('binary');//or hex
             res.on('data',function (data) {//加载数据,一般会执行多次
@@ -25,16 +24,15 @@ exports.fetchURL = function (requset, response) {
                 }
                 })
             }).on('error', function(err) {
-                console.log("http get error:",err);
                 response.send("http get error");
             });
     }
 };
 
-exports.save = function (req, response) {
+exports.save = function (req, response, next) {
     var body = req.body;
     var htmlContent = body.htmlContent;
-    console.log('------save-------');
+    var fileName = body.fileName;
     if (htmlContent) {
         var match = htmlContent.match(/<meta.*?charset=['"]?(.*?)['"].*?[\/]?>/);
         if (match) {
@@ -44,18 +42,19 @@ exports.save = function (req, response) {
                 encoding = 'gbk';
             }
             htmlContent = iconv.encode(htmlContent, encoding);
-            // var iconv = new Iconv('UTF-8', encode);
-            // htmlContent = iconv.convert(htmlContent);
         } else {
             console.log('木找到charset 用default utf8--!');
         }
         var fs = require('fs');
-        var fileName = (+ new Date()).toString(16) + '.html';
+        if (!fileName) {
+            fileName = (+ new Date()).toString(16) + '.html';
+        }
         fs.writeFile('./public/demo/' + fileName, htmlContent, function (err) {
             if (err) {
                 throw err;
             }
-            response.redirect('/download/demo/' + fileName);
+            response.send(fileName);
+            next();
         });
     } else {
         response.send('html空的');

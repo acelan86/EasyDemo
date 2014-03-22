@@ -10,8 +10,6 @@
     "jade": "*",
     "ejs": "*",
     "iconv-lite": "*",
-    "codemirror": "*",
-    "select2": "*",
-    "bootstrap": "*"
+    "socket.io": "*"
   }
 }

@@ -22,9 +22,14 @@ $(document).ready(function () {
         bindLocationURL();
         bindFetchHanlder();
         bindTypeSelHandler();
-        bindToolBarHandler();
+        // bindToolBarHandler();
         bindInsertCodeHandler();
         bindSaveBtnHandler();
+        bindInsInsertHandler();
+        bindExtraKey();
+        window.onbeforeunload = function () {
+            return '离开页面会丢失当前编辑内容';
+        };
     })();
     /**
      * [bindLocationURL 绑定页面选择框，获取常见页面的URL]
@@ -43,6 +48,7 @@ $(document).ready(function () {
                 data: { url : $('#url').val() }
             });
             request.done(function (msg) {
+                fileName = '';
                 cm.setValue(msg);
                 cm.setOption('fullScreen', !cm.getOption('fullScreen'));
             });
@@ -52,7 +58,8 @@ $(document).ready(function () {
     function bindTypeSelHandler() {
         $('#type').bind('change', function () {
             var type = $('#type').val();
-            if (type != 0) {
+            type = _mediaMap[type];
+            if (type) {
                 pdps = searchPdps(type);
                 if (pdps) {
                     $('#pdpsInput').val(pdps);
@@ -86,11 +93,12 @@ $(document).ready(function () {
                     '           size : "1600*600",',
                     '           type : "#{type}",',
                     '           content : [{',
-                    '               src: "http://d1.sina.com.cn/201312/11/527511.jpg",',
+                    '               src: ["http://d1.sina.com.cn/201312/11/527511.jpg"],',
                     '               monitor : [""],',
-                    '               link : [""]',
-                    '          }],',
-                    '       id : "#{pdps}"',
+                    '               link : [""],',
+                    '               type: [""]',
+                    '           }],',
+                    '           id : "#{pdps}"',
                     '       };',
                     '   </script>\n'].join('\n');
 
@@ -102,10 +110,10 @@ $(document).ready(function () {
     function bindInsertCodeHandler () {
         $('#topInsertBtn').bind('click', function () {
             var pdps = $('#pdpsInput').val();
-            var tpl = format(scriptTpl, {pdps: pdps, type: $('#type').val()});
+            var codeSnippet = format(_mediaTpl[$('#type').val()] || scriptTpl, {pdps: pdps, type: $('#type').val()});
             var cusor = cm.getSearchCursor('</head>');
             if (cusor.find()) {
-                cm.replaceRange(tpl, {line: cusor.from().line, ch: 0});
+                cm.replaceRange(codeSnippet, {line: cusor.from().line, ch: 0});
                 cm.scrollIntoView({line: cusor.from().line + 7, ch: 0});
             }
         });
@@ -116,16 +124,19 @@ $(document).ready(function () {
                 console.log('require pdps');
                 // return;
             }
-            var tpl = format(scriptTpl, {pdps: pdps, type: $('#type').val()});
+            var codeSnippet = format(_mediaTpl[$('#type').val()] || scriptTpl, {pdps: pdps, type: $('#type').val()});
             var cusor = cm.getCursor();
             if (cusor) {
-                cm.replaceRange(tpl, {line: cusor.line, ch: 0});
+                cm.replaceRange(codeSnippet, {line: cusor.line, ch: 0});
                 cm.scrollIntoView({line: cusor.line + 7, ch: 0});
             }
         });
     }
 
-
+    /**
+     * [bindToolBarHandler 面板收起展开处理]
+     * @return {[type]} [description]
+     */
     function bindToolBarHandler () {
         var timer;
         $('#fix-tools').hover(function () {
@@ -141,21 +152,52 @@ $(document).ready(function () {
             }, 50);
         });
     }
-
+    var fileName = '';
     function bindSaveBtnHandler () {
         $('#saveBtn').bind('click', function () {
             var htmlContent = cm.getValue('\n');
-            console.log(htmlContent);
-            $('#htmlContent').val(htmlContent);
-            $('#saveForm').submit();
-            // $.ajax({
-            //     url: "/api/fetchURL",
-            //     type: "POST",
-            //     data: { url : $('#url').val() }
-            // }).done(function () {
+            $.ajax({
+                url: "/api/save",
+                type: 'POST',
+                data: {
+                    'fileName' : fileName,
+                    'htmlContent': htmlContent
+                }
+            }).done( function (msg) {
+                fileName = msg;
+                console.log('name --' + msg);
+                $('#downloadBtn').attr('href', '/download/demo/' + fileName);
+                $('#downloadBtn').show();
+                $('#fileLink').attr('href', '/monitor?filename=' + fileName);
+                $('#fileLink').show();
+            });
+        });
+    }
 
-            // });
+    var insTpl = ['<script async charset="utf-8" src="http://d3.sina.com.cn/litong/zhitou/sinaads/release/sinaads.js"></script>',
+                '<ins class="sinaads" data-ad-pdps="#{pdps}"></ins>',
+                '<script>(sinaads = window.sinaads || []).push({});</script>',
+                ''].join('\n');
+    function bindInsInsertHandler () {
+        $('#insInsertBtn').bind('click', function () {
+            var pdps = $('#pdpsInput').val();
+            if (!pdps) {
+                console.log('require pdps');
+            }
+            var tpl = format(insTpl, {pdps: pdps});
+            var cusor = cm.getCursor();
+            if (cusor) {
+                cm.replaceRange(tpl, {line: cusor.line, ch: 0});
+                cm.scrollIntoView({line: cusor.line + 7, ch: 0});
+            }
+        });
+    }
 
+    function bindExtraKey () {
+        $(document).bind('keydown', function (e) {
+            if (e.altKey && e.keyCode === 18) {
+                $('#saveBtn').trigger('click');
+            }
         });
     }
 });

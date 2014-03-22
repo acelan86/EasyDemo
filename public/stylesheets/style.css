@@ -23,7 +23,7 @@ a {
     position: fixed;
     width: 180px;
     top: 60px;
-    right: -170px;
+    right: 0px;
     padding: 15px 0px 15px 10px;
     background-color: burlywood;
     opacity: .8;

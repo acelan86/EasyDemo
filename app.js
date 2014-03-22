@@ -34,7 +34,6 @@ app.use('/download/demo', function (req, res, next) {
 
 app.use('/public/demo', function (req, res, next) {
     //fix http response header content-type: text/html;charset:UTF-8 
-    console.log(req.path);
     if (/\.html\s*$/.test(req.path)) {
         res.setHeader('Content-Type', 'text/html');
     }
@@ -49,9 +48,21 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 
-app.post('/api/fetchURL', api.fetchURL);
-app.post('/api/save', api.save);
+app.get('/monitor', routes.monitor);
 
-http.createServer(app).listen(app.get('port'), function(){
+app.post('/api/fetchURL', api.fetchURL);
+app.post('/api/save', api.save, function (req) {
+    var filename = req.body.fileName;
+    io.sockets.emit('update', filename);
+    console.log('websocket emit event ' + filename);
+});
+
+var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+var io = require('socket.io').listen(server);
+io.on('connection', function (socket) {
+    // console.log('web socket connect');
+});
+io.set('log level', 1);
